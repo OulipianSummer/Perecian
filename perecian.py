@@ -149,7 +149,9 @@ class SizeValidator(Validator):
         try:
             num = int(document.text)
             if num > 10 or num < 5 or num == 6:
-                message='Please enter a number between 5 and 10 that is not 6'
+                raise ValidationError(
+                message='Please enter a number between 5 and 10 that is not 6',
+                cursor_position=len(document.text))
         except ValueError:
             raise ValidationError(
                 message='Please enter a number',
