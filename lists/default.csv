@@ -1,0 +1,45 @@
+list_name,list_id,1,2,3,4,5,6,7,8 pages,9,10
+Position,0,kneeling,descending/ crouching,prone,sitting down,standing,ascending/above ground,entering,exiting,laying down,one arm in the air
+Activity,0,painting,interviewing,Using the toilet,erotic,cleaning,using a map,fixing,reading/writing,holding a piece of wood,eating
+Quote 1,1,Flaubert,Tern,Proust,Kafka,Leiris,Roussel,Raymond Queneau,Verne,Borges,Harry Mathews
+Quote 2,1,Mann,Nabokov,Roubaud,Bittern,Rabelais,Freud,Stendhal,Joyce,Lowry,Italo Calvino
+Couples 1,2,Laurel,Sickle,Racine,Philemon,Crime,Pride,Night,Ashes,Arable,Beauty
+Couples 2,2,Hardy,Hammer,Shakespeare,Baucis,Punishment,Prejudice,Fog,Diamonds,Livestock,Beast
+No. of people,3,1,2,3,4,5,more than 5,"1,","2,","3,",0
+Role,3,occupant,occupant.,occupant ..,Door-to-door salesman,worker,"other (investigator, postman)",customer,contractor,servant,friend
+3rd sector,4,miscellaneous,bibliography,laws and regulations,announcement,cooking recipe,pharmacy flier,"agendas, calendars",program,dictionary,"user manuals, 
+guide,handbook"
+motive?,4,coming back from a trip,Receiving a letter,establishing parentage,greed,bathe in nostalgia,Have a dream,create,solve a riddle,chasing a pipe dream,plotting revenge
+Walls,5,matte paint,jute or other fabric,woodwork,cork,metal panels,plain or  patterned wall paper,glossy paint,printed canvas,patterned paper,leather or vinyl
+Floors,5,English parquet,Hungarian point parquet,herringbone parquet,mosaic parquet or compartment,rectangular tile,carpet,wool or silk rug,lino,tiles,"rope mat, sisal, rafia"
+Period,6,antiquity,middle age,Renaissance,17th,18th,The French Revolution,19th,Before 1939,1939-1945,post-war
+Place,6,Germany,Italy,Great Britain,Spain,"Russia, USSR",United States,Far East,North Africa,South America,Middle East
+Style,7,Chinese,contemporary,Louis XV-XVI,Empire,Regency,Napoleon iii,Louis XIII,rustic,camping,modern style 1900 and later
+Furniture,7,table,chair,armchair,"sideboard, wardrobe, chest",bed,bookshelf,"pedestal table, etc ...","chest of drawers, chiffoniers","couch, sofa",office
+Length,8,inf. a few lines,1 page,2 pages,3 pages,4 pages,5 pages,6 pages,8 pages,10 pages,+ 12 pages
+Miscellaneous,8,weapons,money (banknotes),disease,flames,military,Institutions,clergy,knife,physiology 1860,Danish literature
+Age/Sex,9,woman 35-60,man 35-60,old man,old woman,young woman 18-35,young man 18-35,boy av. 17 years,girl av. 17 years,young child av. 10 years,new born av. 1 year
+Animals,9,cat,dog,bird,fish,"rat, mouse",fly,"wasp, bees",spider,"insects, bugs",other
+Clothes,10,costume set,coat,indoor jacket,"pants, skirt",vest,shirt…,sweater…,raincoat,uniform,jacket ...
+Fabric (patterns),10,Solid color,striped,spotted,checkered,Plaid,patchwork,Ramage print,floral print,"printed, other",embroidered
+Fabric (materials),11,silk,wool,cashmere,flannel or felt,nylon,leather,thread,cotton,velvet,linen
+Colors,11,white,green,brown,black,yellow,orange,gray,red,purple,blue
+Accessories,12,hat,"tie, scarf","scarf, neck warmer",gloves,shoes,handkerchiefs,suspenders,belts,"underpants, underwear",stockings and socks
+Jewelry,12,necklace,ring,bracelet,cane,glasses,"medals, decorations",watch,lighter,handbag,"tie pin, brooch"
+Reading materials,13,daily paper,novel essay,weekly paper,letter,3rd sector,review,"detective novel, science fiction","technical report, 
+class book",art book,porn
+Music,13,ancient,classic,romantic,serialism/ post-tonal,contemporary,jazz,pop and folk,old tune,military,opera
+Paintings,14,The Arnolfini couple (Jan Van Eyck),St Jerome (Antonello of Messina),The Ambassadors (Hans Holbein),The Fall of Icarus (Pieter Bruegel),The Meninas (Vélasquez),The Tempest (Giorgione),The Banker and his wife (Metsys),The Dream of St. Ursula (Carpaccio),The Hay Wagon (Hieronymus Bosch),Still life with a chessboard (Lubin Baugin)
+Books,14,And Then There Were None (Agatha Christie),The Disappearance (Georges Perec),Dreaming Crystal (Théo Sturgeon),Moby Dick (Herman Melville),Conversions (Harry Mathews),Pierrot my friend (Raymond Queneau),One hundred years of loneliness (Gabriel García Márquez),Hamlet (William Shakespeare),The Holy Grail,King Ubu (Alfred Jarry)
+Drinks,15,water,wine,alcohol,"beer, cider",tea,coffee,infusion,Juice,milk,soda etc ...
+Food,15,bread,cold cuts,"eggs, raw vegetables, salads","meat, offal, game",fish and shellfish,"vegetables, starches",cheeses,fruits,"cakes, sweets",zakouskis/ appetizers
+Small Furniture,16,"pendulums, clocks",ashtrays,"lamps, chandeliers",mobile sculptures,mirrors,pianos,chandeliers,phone,"radio, hifi, etc ...",boxes
+Games,16,cards,"dice, bones",dominoes,solitary,"go, chess, checkers",backgammon,crossword,puzzle,clockwork toys,"spinning tops, cupcakes"
+Feelings,17,indifference,joy,pain,boredom,anger,anguish,astonishment,hatred,love,ambition
+Paint,17,bare wall,drawing,engraving,"watercolor, gouache",board,reproduction,maps and plans,Pictures,posters,postcards
+Surfaces,18,square,rectangle,triangle,hexagon,octagon,trapezoid,round,oval,rhombus,stars
+Volumes,18,cube,rectangular prism,pyramid,cylinder,sphere,egg,polyhedron,cone,hemisphere,barrel
+Flowers,19,flowers,evergreens,shrubs,green plants,herbs,Driftwood,"flowers under glasses, artificial",dried flowers,"Japanese gardens, bonsai trees",succulents
+Trinkets,19,marble,semi-precious stone,metal ore,"copper, tin",gold Silver,"ivory, mother-of-pearl","crystal, cut glass",alabaster,bronze,"stainless steel, aluminium"
+Gap,20,1 – 6,7 – 10,11 – 14,15 – 18,19 – 22,23 – 26,27 – 30,31 – 34,35 – 38,39 - 42
+Wrong,20,1 – 6,7 – 10,11 – 14,15 – 18,19 – 22,23 – 26,27 – 30,31 – 34,35 – 38,39 – 42

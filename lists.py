@@ -7,13 +7,13 @@ import csv
 #   Functions
 #------------------------------------------------------------------
 # Finds the coords from the tour and assigns them to the list
-# TODO: add in an arg for the csv name
-def make(coords, mols_list, size):
+
+def make(coords, mols_list, size, path):
 
     chapters = size * size
     chapters_list = range(1, chapters + 1)
 
-    with open("default.csv", newline="") as fopen:
+    with open(path, newline="") as fopen:
         reader = csv.reader(fopen, delimiter=",")
         
         # Skips headers and addes them to a list item

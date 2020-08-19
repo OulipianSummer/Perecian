@@ -66,7 +66,7 @@ def make(size, startx, starty):
         if possible_moves == 0:
             print("Something went wrong around" + str(kx + 1) + "," + str(ky+1) + " at move " + str(move))
             print()
-            break
+            return 1
 
         elif possible_moves > 1:
             exits = [0] * size
