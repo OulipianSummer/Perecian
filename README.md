@@ -27,10 +27,10 @@ Additionally, Perecain's lists could also be used as prompts for poetry, short s
 
 ## Customization
 
-Perecain's default prompt's list (found in lists/default.csv) can be customized for different themes, genres, settings, and more. In order to make your own, it is best to simply make a copy of lists/empty.csv and fill in all of the empty cells with your own content.
+Perecain's default prompt's list (found in ```lists/default.csv```) can be customized for different themes, genres, settings, and more. In order to make your own, it is best to simply make a copy of ```lists/empty.csv``` and fill in all of the empty cells with your own content.
 
 ## Quick Start
-Perecian requires Docopt, PyFiglet, and PyInquirer, so ensure to execute:
+Perecian requires Docopt, PyFiglet, and PyInquirer, so make sure to execute:
 
 ```
 pip install docopt pyfiglet pyinquirer
@@ -44,6 +44,18 @@ To run Perecian using the default settings, simply navigate to the Perecain fold
 ```
 python perecian.py default
 ```
+
+Alternatively, you can run
+
+```
+python perecian.py menu
+```
+to pull up the main menu. From there, you can select
+
+```
+New Custom Tour
+```
+to make a new tour to your own specifications, using your own lists (if required).
 
 ## Beta V1.0
 Perecian is still in beta! If you would like to contribute to this project, feel free to open a PR
