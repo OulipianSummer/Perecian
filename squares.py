@@ -11,8 +11,9 @@ def make(size):
 
     latin_squares = []
     
-    # Loop is called size squared times for the sake of having more latin squares than needed
-    for square in range(1, (size * size)):
+    # Loop is called size * 2 times for the sake of having more latin squares than needed, while still keeping runtime low
+    # HACK: Admittedly, it is a bit of a hack
+    for square in range(1, (size * 2)):
         
         all_squares = []
         
@@ -49,8 +50,8 @@ def make(size):
                 if is_valid(new_mols):
                     valid_squares.append(new_mols)
 
-                # TODO: Develop some sort of shuffling mechanic for the MOLS list
                 # TODO: Develop a dynamic length varable for this test below
+                # HACK: The 21 is a bit of hack too.
             if len(valid_squares) == 21:
                 break
             else:
