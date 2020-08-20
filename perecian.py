@@ -96,6 +96,7 @@ def main(size, startx, starty, path, name):
         f.write("Mutually Orthogonal Latin Squares (MOLS)" + "\n")
         f.write("=" * 50 +'\n\n')
 
+        # TODO: Adjust the cutoff point on this slice to make it more dynamic to the csv list
         for mols in range(len(mols_list[0:21])):
             f.write("\n")
             f.write(str(mols + 1) + '\n')

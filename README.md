@@ -32,12 +32,18 @@ Perecain's default prompt's list (found in lists/default.csv) can be customized 
 ## Quick Start
 Perecian requires Docopt, PyFiglet, and PyInquirer, so ensure to execute:
 
-pip install docopt, pyfiglet, pyinquirer
+```
+pip install docopt pyfiglet pyinquirer
+```
 
 before running.
 
 Perecian has a default run mode that will produce a prompts list for a 10 x 10 chess board starting at space 6,6. 
-To run Perecian using the default settings, simply navigate to the Perecain folder using your CLI application of choice, and run python perecian.py default
+To run Perecian using the default settings, simply navigate to the Perecain folder using your CLI application of choice, and run 
 
-## Beta Info
+```
+python perecian.py default
+```
+
+## Beta V1.0
 Perecian is still in beta! If you would like to contribute to this project, feel free to open a PR
