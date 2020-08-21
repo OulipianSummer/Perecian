@@ -58,7 +58,8 @@ Additionally, Perecain's lists could also be used as prompts for poetry, short s
 Perecain's default prompt's list (found in ```lists/default.csv```) can be customized for different themes, genres, settings, and more. In order to make your own, it is best to simply make a copy of ```lists/empty.csv``` and fill in all of the empty cells with your own content.
 
 ## Beta V1.1
-Perecian is still in beta! If you would like to contribute to this project, feel free to open a PR
+Perecian is still in beta! If you would like to contribute to this project, feel free to open a PR.
+Also note that Perecian was initially created and tested using Linux, so if you run into problems using another OS, please let me know!
 
 ## Changelog
 + Aug 21: Update to Beta 1.1, added new features, cleaned up codebase, added some bugfixes, added instructions
