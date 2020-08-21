@@ -61,5 +61,5 @@ Perecain's default prompt's list (found in ```lists/default.csv```) can be custo
 Perecian is still in beta! If you would like to contribute to this project, feel free to open a PR
 
 ## Changelog
-    + Aug 21: Update to Beta 1.1, added new features, cleaned up codebase, added some bugfixes, added instructions
-    + Aug 20: First build Beta 1.0
++ Aug 21: Update to Beta 1.1, added new features, cleaned up codebase, added some bugfixes, added instructions
++ Aug 20: First build Beta 1.0
