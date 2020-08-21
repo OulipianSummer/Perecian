@@ -116,8 +116,10 @@ def main(size, startx, starty, headers, path, name):
         f.write("=" * 50 + "\n")
         f.write("Mutually Orthogonal Latin Squares (MOLS)" + "\n")
         f.write("=" * 50 +'\n\n')
+        
+        csv_half = int(csv_len / 2)
 
-        for mols in range(len(mols_list[0:csv_len])):
+        for mols in range(len(mols_list[0:csv_half])):
             f.write("\n")
             f.write(str(mols + 1) + '\n')
             for row in mols_list[mols]:
