@@ -1,14 +1,13 @@
 """ Perecian
 
 Usage:
-    perecian.py menu
+    perecian.py
     perecian.py default
     perecian.py -h|--help
     perecian.py -v|--version
 
 Options:
-    menu  Opens the main menu
-    default  Runs perecian with the default settings of a sie 10 baord, starting a position 6,6
+    default  Runs perecian with the default settings of a sie 10 baord, starting a position 6,6, using defalt.csv
     -h --help  Shows this screen
     -v --version  Shows the version number
     
@@ -21,10 +20,12 @@ Options:
 import tour
 import squares
 import lists
+from textwrap import wrap, fill
 from docopt import docopt
-import csv
-import pyfiglet
-from PyInquirer import style_from_dict, Token, prompt, Validator, ValidationError
+from csv import reader
+from pyfiglet import figlet_format
+from os.path import isfile
+from PyInquirer import style_from_dict, Token, prompt, Validator, ValidationError, Separator
 
 
 # Although the random module is used, random is seeded using the 
@@ -35,7 +36,7 @@ import random
 #   Functions
 #------------------------------------------------------------------
 
-def main(size, startx, starty, path, name):
+def main(size, startx, starty, headers, path, name):
     """
     Executes the Main Function
 
@@ -45,6 +46,22 @@ def main(size, startx, starty, path, name):
     starty : Starting position y coordinate between 1 and size
 
     """
+    
+    # HACK: I don't love this solution for getting at the number of rows in the csv, but it does work
+    with open(path, newline="") as fopen:
+        csvreader = reader(fopen, delimiter=",")
+        
+        # Skips the headers
+        next(csvreader)
+
+        csv_len = 0
+        for row in csvreader:
+            csv_len += 1
+
+    if csv_len % 2 != 0:
+        print("Error: The csv you have chosen must have an even number of prompts")
+        print("Solution: Consider adding another row to the chosen csv file.")
+        return 1
 
     # Returns a knight's tour
     board, coords = tour.make(size, startx, starty)
@@ -54,7 +71,7 @@ def main(size, startx, starty, path, name):
         return 1
     
     # Returns a list of len(size) mutually orthogonal latin squares
-    mols_list = squares.make(size)
+    mols_list = squares.make(size, csv_len)
 
     # Tests mols_list to ensure nothing went wrong during calculation.
     if mols_list == 1:
@@ -68,13 +85,15 @@ def main(size, startx, starty, path, name):
         # Produces a seed for random using the starting position of the knight
         seed = int(str(startx) + str(starty))
         random.seed(seed)
-        
+
         # Shuffles the list according to the seed set above
         random.shuffle(mols_list)
         
         # Creates a list of prompts for each capter
         prompts = lists.make(coords, mols_list, size, path)
         
+        sections = headers
+
         # Saves the prompts to a text file named after the user's input
         filename = name + '.txt'
         f = open(filename, 'w+')
@@ -96,8 +115,7 @@ def main(size, startx, starty, path, name):
         f.write("Mutually Orthogonal Latin Squares (MOLS)" + "\n")
         f.write("=" * 50 +'\n\n')
 
-        # TODO: Adjust the cutoff point on this slice to make it more dynamic to the csv list
-        for mols in range(len(mols_list[0:21])):
+        for mols in range(len(mols_list[0:csv_len])):
             f.write("\n")
             f.write(str(mols + 1) + '\n')
             for row in mols_list[mols]:
@@ -106,7 +124,7 @@ def main(size, startx, starty, path, name):
 
         for row in prompts:
             f.write("=" * 50 + "\n")
-            f.write("Chapter" + str(row) + " | Knight Coodinates: " + str(coords[int(row - 1)]) + "\n") 
+            f.write(sections + " " + str(row) + " | Knight Coodinates: " + str(coords[int(row - 1)]) + "\n") 
             f.write("=" * 50 +'\n\n')  
             for item in range(len(prompts[row])):
                 for key, value in prompts[row][item].items():
@@ -124,21 +142,23 @@ def main(size, startx, starty, path, name):
 #------------------------------------------------------------------
 
 style = style_from_dict({
+    Token.Separator: '#cc5454',
     Token.QuestionMark: '#673ab7 bold',
     Token.Selected: '#cc5454',  # default
     Token.Instruction: '',  # default
     Token.Answer: '#f44336 bold',
     Token.Question: '',
+    Token.Pointer: '#673ab7 bold'
 })
 
 menu = [
     {
         'type':'list',
         'name': 'options',
-        'message': 'Perecian Main Menu',
+        'message': ' ==== Perecian Main Menu ==== ',
         'choices': [
                 'New Custom Tour',
-                'Quickstart Guide',
+                'Instructions',
                 'About Perecian',
                 'Exit' 
         ]
@@ -172,6 +192,13 @@ class PosValidator(Validator):
                 message='Please enter a number',
                 cursor_position=len(document.text)) 
 
+class FileValidator(Validator):
+    def validate(self, document):
+        if isfile(document.text) == False:
+            raise ValidationError(
+        message = 'Please enter a valid csv filepath',
+        cursor_position = len(document.text))
+
 settings = [
     
     {
@@ -197,9 +224,16 @@ settings = [
     },
     {
         'type': 'input',
+        'name': 'headers',
+        'message': 'Section Headers',
+        'default': 'Chapter',
+    },
+    {
+        'type': 'input',
         'name': 'file_path',
         'message': 'File path to the a csv file (default is lists/default.csv): ',
-        'default': 'lists/default.csv'
+        'default': 'lists/default.csv',
+        'validate': FileValidator
     },
     {
         'type':'input',
@@ -222,8 +256,8 @@ settings = [
 if __name__ == '__main__':
     arguments = docopt(__doc__, version='Beta 1.0')
     if arguments["default"] == True:
-        main(10, 6, 6, "lists/default.csv", "Perecian Prompts Output")
-    elif arguments["menu"] == True:
+        main(10, 6, 6, "Chapters", "lists/default.csv", "Perecian Prompts Output")
+    else:
         menu = prompt(menu, style=style)
         
         if menu['options'] == "New Custom Tour":
@@ -233,134 +267,83 @@ if __name__ == '__main__':
             settings = prompt(settings, answers, style=style)
             
             if settings['exe'] == True:
-                size = int(settings['size'])
-                startx = int(settings['startx'])
-                starty = int(settings['starty'])
-                path = settings['file_path']
-                name = settings['file_name']
                 print("Generating Prompts")
-                main(size,startx,starty, path, name)
+                main(int(settings['size']),int(settings['startx']),int(settings['starty']), settings['headers'], settings['file_path'], settings['file_name'])
 
         elif menu['options'] == "Exit":
             print("Exiting Perecian")
             exit
-        elif menu['options'] == 'Quickstart Guide':
+        elif menu['options'] == 'Instructions':
             print()
-            title = pyfiglet.figlet_format("Quick Start", font='roman', width = 150)
-            print(title)
-
             start ="""
-=== Default Settings ===
+========Getting Started========
+To run Perecian using its default settings and lists, simply execute
 
-    Perecian can be run using only its default settings. To do this, navigate to the Perecain folder and run:
+python perecian.py default
 
-    python main.py default
+in you favorite command line interface. Your text file will be saved to the Perecian folder as:
 
-    Using this command, Perecian will export prompts based on a 10 x 10 chess board starting at position 6 6, using the default
-    moveset of, [[-2,1],[-1,2],[1,2],[2,1],[2,-1],[1,-2],[-1,-2],[-2,-1]] and using default.csv as its list source.
+Perecian Prompts Output.txt
 
+========Customization========
 
-=== How Does Perecian Work? ===
+===Tours===
+In order to change the default settings of Perecian, open the main menu by executing:
 
-    An in-depth explantion can be found under "About Perecain" from the main menu options
+python perecian.py
 
+and navigate to the New Custom Tour option from the main menu. From this page, you will be able to input your own preferred settings into the program.
 
-== Custom Tours ==
+>>>Note On Tour Sizes<<<
+Although a knight's tour is possible on a 6 x 6 chess board, users are disallowed from creating them because it is mathematically impossible to solve a mutually orthogonal latin square of order 6.
 
-    To make your own custom tours with different board sizes, starting positions, list sources, and move orders,
-    navigate to the Perecain folder and run:
+>>>Note On Starting Positions<<<
+Perecian cannot (yet) solve all knight's tours on all boards on all posible starting positions. For example, a tour made with board size 5 x 5 at starting position 1,2 is not solveable, and will result in a traceback error. These errors are more common on smaller boards.
 
-    python main.py
+===CSV Lists===
+Users are encouraged to create their own prompts lists for Perecian in order to create their own unique writing projects. In order to do this, it is advised to open the lists folder and copy empty.csv. From there, users can input their own content into the new csv file.
 
-    Then select the "New Custom Tour" option from main menu options
+>>>Note On Custom Lists<<<
+Custom lists MUST contain an even number of rows (excluding the header row) in order for Perecian to read  them. Additionally, each row MUST contain the same number of prompts as the board size. For instance, if  a user selects a chess board size of 10 x 10, the csv file must have 10 prompts per row.
+
+Besides the above limitations, a user can add as many row lists as they desire provided that their chosen hardware can solve half that number of MOLS and store them in memory. Alternatively, if a user selects a smaller chess board size (say, 7 x 7), Perecian will still run correctly with a prompts list containing 10 items each row, but the last 3 prompts from each list be lost since Perecian will only read the first 7 prompts.
+
+========I Made A Text File... Now What?========
+Now it's time to get started writing! The inspiration behind Perecian comes from a novel writen by Georges Perec called Life: A User's Manual. Perec initially came up with the idea of writing a novel that was written using a type of creative writing called constrained writing. Constrained writing, for the purposes of this program at least, is a style of writing in which the writer chooses to subject themselves to an arbitrary set of rules in order to challenge themselves and affect the style of writing they are able to produce. So, in many ways, this program is really just an aide or a springboard for creative writing.
+
+With respect to the file produced by running this program, Perecian recreate the system Georges Perec used to write Life: A User's Manual all the way down to even using a csv containing many of the same original prompts Perec devised for use in his novel. There is plenty of articles talking about how Perec wrote this masterpeice of fiction, but I will simply defer to the Wikipedia article on this novel for further reading.
+
+There are, however, some key exceptions between this program's output and Perec's original constraint system.
+
+To begin with, Life: A User's Manual is a story about the residents of a fictional apartment building in Paris. Perec tells the story one chapter at a time by moving from room to room in the building. The order in which the story is written was selected by means of overlaying the knight's tour path onto an architectural cross-section of the fictional building. Perecian cannot, currently, take as input any kind of map or building, or the like. If a user wants to recreate this part of the constraint system, they will simply need to do it by hand.
+
+Additionally, it should be noted that, although scholars do know a lot about how Perec wrote Life: A User's Manual, it is widely acknowledged that there were some additional constraint systems that Perec never told anybody about. With that in mind, users are encouraged to customize their writing prompts beyond what even this program is capable of doing.
+
+Besides that, the sky is the limit! Feel free to use this program to create any kind of writing constraint system that you can immagine.
             """
-
-            print(start)    
+            wraplist = wrap(text=start, replace_whitespace=False, drop_whitespace=False, width = 90)
+            for row in wraplist:
+                print(row)  
 
         elif menu['options'] == 'About Perecian':
             print()
-            title = pyfiglet.figlet_format("Perecian", font="roman", width=90)
+            title = figlet_format("Perecian", font="roman", width=90)
             print(title)
             print("Beta 1.0")
             
-            about ="""
-    Perecian is an open souce CLI tool for writers written in Python.
+            about ="""Perecian is an open souce CLI tool for writers written in Python.
                     
-    Based off of the constraints Georges Perec useed to create his masterpeice, 
-    Life: A User's Manual, Pereican uses both knight's tours, and mutually 
-    orthogonal latin squares to create a unique list of constrained writing 
-    prompts for novels, short stories, poems, and much more.
-
-== How It Works ==
-
-    By default, Perecian creates prompts by first solving a knight's tour on 
-    a 10 x 10 chess board. A knight's tour is a classic logic puzzle involving
-    moving a single knight chess piece in such a way that it visits or "tours"
-    every space on a chess board exactly once. To put this puzzle in perspective, 
-    a standard 8 x 8 chessboard contains over 19 quadrillion possible knight's
-    tours!
-
-    In order to make this puzzle easier to solve, Perecian utilizes a simple
-    rule called Warnsdorff's Rule, first described by H. C. von Warnsdorff
-    in 1823. The rule states that a tour can be solved on any chess board
-    (larger than 4 x 4), from any starting position granted that the puzzle
-    solver always moves the knight to the square with the fewest possible
-    following moves. Using this heuristic, Perecian is able to solve a
-    knight's tour in less than a second on most computers.
-    
-    Next, Perecian uses the move coordinates of the knight's tour to reference
-    21 mutually orthogonal latin squares (MOLS) of order 10 (also created by 
-    Perecain at run time). A MOLS (someitmes refered to as a latin bi-square 
-    or a graeco-latin square) is another mathematical puzzle created from combining 
-    two latin squares, which are spiritually similar to a Sudoku square. Each row in 
-    an order 10 latin square contains the numbers 1 - 10, and each column also contains
-    the numbers 1 - 10. A MOLS is created by overlaying two latin squares
-    such that each number pairing across the grid is unique.
-
-    Using the coordinates from each step in the knight's tour, Perecian references
-    that same square in each of the 21 MOLS. For example, if the knight starts at
-    row 6, column 6, Perecain will look at the number pairings in row 6, column 6
-    of each of the MOLS. Using the unique number parings located at that specific cell
-    in each MOLS table, Perecian makes an aditional reference to a list of prompts
-    stored in lists/default.csv. Using each of those unique number pairings stored
-    in the 21 MOLS, Perecian constructs a unique list of 42 prompts for each move
-    the knight makes in its tour.
-
-    At the end of this dizzying list of steps, chess moves, and cross references, 
-    Perecian produces 100 unique lists of 42 prompts. For the writer, each list
-    is constructed as a checklist of items, colors, materials, movitves, feelings,
-    ideas, books, paintings, quotes, and much more. These lists, like in Life:
-    A User's Manual are considerd to be a sort of inventory of what each chapter of a
-    potential novel will contain. 
-                    
-== For Writers ==
-
-    Using these lists, a writer is able to construct an entire novel's worth of
-    constrained writing prompts. Perecian can also be customized to export
-    tours both larger and smaller than those created by a 10 x 10 chess board.
-    Writers are encouraged to add or remove constraints as they see
-    fit (since Perec himself did so, either strictly or loosely adhereing to constraints
-    as the need arose or inspiration struck), but the aim of Perecian is to challenge
-    writers to test their skills by trying to adhere to the constraints as much as possible
-    to train and challenge themselves to produce works entirely unlike what they are used to
-    creating.
-
-
-    Writers are encouraged to be as creative as possible when writing using the prompts created
-    by Perecian. Georges Perec himself used similar constratints and took them a step further by
-    overlaying the knight's tour chess board onto a floorplan of a fictional Parisian apartment
-    building wherein each chapter represented stories of the residents of that building told
-    in the order of the knight's tour.
-                    
-    Additionally, Perecain's lists could also be used as prompts for poetry,
-    short stories, letters, and much more. 
-
-== Further Customization ==
-
-    Perecain's default prompt's list (found in lists/default.csv) can be customized for different
-    themes, genres, settings, and more. In order to make your own, it is best to simply make a copy of
-    lists/empty.csv and fill in all of the empty cells with your own content.
+Based off of the constraints Georges Perec useed to create his masterpeice, Life: A User's Manual, Pereican uses both knight's tours, and mutually orthogonal latin squares to create a unique list of constrained writing prompts for novels, short stories, poems, and much more.
+"""
+            how = """Perecian produces a list of writing promtps by first solving two classic mathematical puzzles: a knight's tour, and a colleciton of mutually orthogonal latin squares (MOLS). By using the solutions to these two puzzles, it will generate a list of writing prompts by programatically pulling from a specially formatted csv file stored in the lists folder. 
+The text file Perecian produces will first list the solutions to these puzzles, and then each individual chapter. By default, Perecian will solve a knight's tour on a 10 x 10 chess board, and 21 MOLS of order 10. However, it is possible to customize Perecian to solve both larger and smaller chess board sizes and MOLS. Additionally, the user is able to create a custom prompts list csv to enable Perecian to output prompts for different types of writing assignments.
                 """
-            print(about)
+            aboutfill = fill(text=about, width = 90)
+            howfill = fill(text=how)
+            print(aboutfill)
+            print()
+            print("====How It Works====")
+            print()
+            print(howfill)
             
             

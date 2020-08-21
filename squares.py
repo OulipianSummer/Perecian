@@ -1,4 +1,4 @@
-def make(size):
+def make(size, csv_len):
     """
     Usage:
     make() is the main function of squares.
@@ -9,16 +9,20 @@ def make(size):
     
     """
 
+    # A list for holding all of the latin squares about to be produced
     latin_squares = []
     
-    # Loop is called size * 2 times for the sake of having more latin squares than needed, while still keeping runtime low
-    # HACK: Admittedly, it is a bit of a hack
+    # HACK: Although it does work, it feels like a hack to call the loop size * 2 times just for the sake of getting more latin squares
+    # TODO: Find some way to make this more dynamic or (at the very least) more appropriately sized to the problem at hand
     for square in range(1, (size * 2)):
         
-        all_squares = []
+        # A list for holding a single latin square
+        current_suqare = []
         
-        # Loop creates latin squares of size by size order
+        # Loop creates latin squares of order (size)
         for i in range(size):
+           
+            # A list for holding rows of squares
             row = []
             
             for j in range(size):
@@ -27,31 +31,43 @@ def make(size):
                 value = (square*i + j) % size
                 row.append(value)
             
-            all_squares.append(row)
+            current_suqare.append(row)
         
-        latin_squares.append(all_squares)
+        latin_squares.append(current_suqare)
 
+    # A list that holds all valid MOLS about to be produced
     valid_squares = []
 
+    # A variable to hold the length of the latin_squares list, for the sake of reducing stack frames
     num_of_ls = len(latin_squares)
     
+    # Creates MOLS from combining two latin squares
     for i in range(num_of_ls):
         
-        current_sq = latin_squares[i]
+        # Holds the current latin square in memory
+        current_latin_sq = latin_squares[i]
         
+        # Calls the next latin square in the sequence
         for j in range(i+1, num_of_ls):
             
-            next_sq = latin_squares[j]
+            # Holds the next latin square
+            next_latin_sq = latin_squares[j]
+            
+            # A list for holding a new MOLS object about to be created
             new_mols = []
             
-            for current_row, next_row in list(zip(current_sq, next_sq)):
+            # Combines the entries of each latin square row into a new MOLS row
+            for current_row, next_row in list(zip(current_latin_sq, next_latin_sq)):
                 new_mols.append(list(zip(current_row, next_row)))
                 
-                if is_valid(new_mols):
+                # Checks that each new MOLS is actually valid ie. each pairing is unique
+                if is_valid(new_mols, size):
                     valid_squares.append(new_mols)
 
-                # TODO: Develop a dynamic length varable for this test below
-                # HACK: The 21 is a bit of hack too.
+
+            # HACK: The 21 here is a bit of hack too since there is no guarantee that the csv will always contain 42 rows.
+            # TODO: Make this number actually associated to the number of rows in the csv list
+            # TODO: Also, use seeded sampling to return the lists instead of just taking the first 21
             if len(valid_squares) == 21:
                 break
             else:
@@ -59,7 +75,8 @@ def make(size):
 
     return valid_squares      
 
-def is_valid(mols):
+# Using the set function from python, checks that each entry is unique. Rows containing repeated items are thrown out
+def is_valid(mols, size):
     """
     is_valid() checks each mols to see if the rows contain unique pairings of numbers
 
@@ -67,9 +84,16 @@ def is_valid(mols):
     mols : a mutually orthogonal latin square
     
     """
-    size = len(mols) ** 2
+    
+    square_size = size ** 2
     row_set = set()
+    
     for row in mols:
         row_set.update(row)
-    return len(row_set) == size
+    
+    # Since set throws out repeats, any mols that does not pass the size comparison must be invalid 
+    if len(row_set) == size:
+        return True
+    else:
+        return False    
 

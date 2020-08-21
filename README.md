@@ -3,6 +3,34 @@ Perecian is an open souce CLI tool for writers written in Python.
                     
 Based off of the constraints Georges Perec useed to create his masterpeice, Life: A User's Manual, Pereican uses both knight's tours, and mutually  orthogonal latin squares to create a unique list of constrained writing prompts for novels, short stories, poems, and much more.
 
+## Quick Start
+Perecian requires Docopt, PyFiglet, and PyInquirer, so make sure to execute:
+
+```
+pip install docopt pyfiglet pyinquirer
+```
+
+before running.
+
+Perecian has a default run mode that will produce a prompts list for a 10 x 10 chess board starting at space 6,6. 
+To run Perecian using the default settings, simply navigate to the Perecain folder using your CLI application of choice, and run 
+
+```
+python perecian.py default
+```
+
+Alternatively, you can run
+
+```
+python perecian.py
+```
+to pull up the main menu. From there, you can select
+
+```
+New Custom Tour
+```
+to make a new tour to your own specifications, using your own lists (if required).
+
 ## How It Works
 
 By default, Perecian creates prompts by first solving a knight's tour on  a 10 x 10 chess board. A knight's tour is a classic logic puzzle involving moving a single knight chess piece in such a way that it visits or "tours" every space on a chess board exactly once. To put this puzzle in perspective, 
@@ -29,33 +57,9 @@ Additionally, Perecain's lists could also be used as prompts for poetry, short s
 
 Perecain's default prompt's list (found in ```lists/default.csv```) can be customized for different themes, genres, settings, and more. In order to make your own, it is best to simply make a copy of ```lists/empty.csv``` and fill in all of the empty cells with your own content.
 
-## Quick Start
-Perecian requires Docopt, PyFiglet, and PyInquirer, so make sure to execute:
-
-```
-pip install docopt pyfiglet pyinquirer
-```
-
-before running.
-
-Perecian has a default run mode that will produce a prompts list for a 10 x 10 chess board starting at space 6,6. 
-To run Perecian using the default settings, simply navigate to the Perecain folder using your CLI application of choice, and run 
-
-```
-python perecian.py default
-```
-
-Alternatively, you can run
-
-```
-python perecian.py menu
-```
-to pull up the main menu. From there, you can select
-
-```
-New Custom Tour
-```
-to make a new tour to your own specifications, using your own lists (if required).
-
-## Beta V1.0
+## Beta V1.1
 Perecian is still in beta! If you would like to contribute to this project, feel free to open a PR
+
+## Changelog
+    + Aug 21: Update to Beta 1.1, added new features, cleaned up codebase, added some bugfixes, added instructions
+    + Aug 20: First build Beta 1.0
