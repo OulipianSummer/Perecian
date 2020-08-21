@@ -225,7 +225,7 @@ settings = [
     {
         'type': 'input',
         'name': 'headers',
-        'message': 'Section Headers',
+        'message': 'Section Headers:',
         'default': 'Chapter',
     },
     {
@@ -261,8 +261,6 @@ if __name__ == '__main__':
         menu = prompt(menu, style=style)
         
         if menu['options'] == "New Custom Tour":
-           
-            answers = {'ignore':'me'}
 
             settings = prompt(settings, answers, style=style)
             
