@@ -98,6 +98,8 @@ def main(size, startx, starty, headers, path, name):
         filename = name + '.txt'
         f = open(filename, 'w+')
 
+        f.write(figlet_format("Perecian", font="roman", width=90))
+
         f.write("=" * 50 + "\n")
         f.write("Knight's Tour" + "\n")
         f.write("=" * 50 +'\n\n')  
@@ -261,9 +263,8 @@ if __name__ == '__main__':
         menu = prompt(menu, style=style)
         
         if menu['options'] == "New Custom Tour":
-
+            answers = {"ignore":"me"}
             settings = prompt(settings, answers, style=style)
-            
             if settings['exe'] == True:
                 print("Generating Prompts")
                 main(int(settings['size']),int(settings['startx']),int(settings['starty']), settings['headers'], settings['file_path'], settings['file_name'])
