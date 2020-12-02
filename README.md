@@ -4,13 +4,13 @@ Perecian is an open souce CLI tool for writers written in Python.
 Based off of the constraints Georges Perec useed to create his masterpeice, Life: A User's Manual, Pereican uses both knight's tours, and mutually  orthogonal latin squares to create a unique list of constrained writing prompts for novels, short stories, poems, and much more.
 
 ## Quick Start
-Perecian requires Docopt, PyFiglet, and PyInquirer, so make sure to execute:
+Perecian requires Docopt, PyFiglet, and PyInquirer, so be sure to execute:
 
 ```
-pip install docopt pyfiglet pyinquirer
+pip install requirements.txt
 ```
 
-before running.
+in the root directory before running.
 
 Perecian has a default run mode that will produce a prompts list for a 10 x 10 chess board starting at space 6,6. 
 To run Perecian using the default settings, simply navigate to the Perecain folder using your CLI application of choice, and run 
