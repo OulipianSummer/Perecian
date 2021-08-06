@@ -1,56 +1,35 @@
-#!/usr/bin/env python
+"""Perecian
 
-from tour import make_tour
+Usage:
+    perecian new
+    perecian new <project_name> (-e | --export) <src_path> <to_path>
+    perecian new <project_name> [(-e | --export)] <order> <start> <list_path> [<to_path>]
+    perecian generate tour <order> <start>
+    perecian generate mols <order>
+    perecian generate list <order> <length>
+    perecian (-h | --help)
+    perecian (-v | --version)
+
+Options: 
+    -h --help       Show this screen
+    -v --version    Show version
+    -e --export     Export results to path
+
+Examples:
+    
+"""
+
+from tour import tour_make
 import sys
+import docopt
 
-def main():
+def main(args):
     """ Executes the main function
-
-    filepath settings?
-
-    Options
-    -f or --full <-- default
-        if given a dir path, exports formatted to file
-        otherwise, prints to console        
-
-    -F or --fullcustom
-        takes two filepaths seperated by a >
-        custom > output
-        same behavior as base form
-        if custom is empty, search in basedir
-        if output is empty, place in basedir
-
-    -t or --tour
-        -w or --warnsdorff
-        -s or --shuffle
-    
-    -T or --tourcustom
-        takes string or filepath
-
-    -m or --mols
-        takes a filepath to a mols file
-
-    -M or --molscustom
-        takes string or filepath
-
-    -l or --list
-        takes a filepath
-
-    -L or --listcustom
-        takes filepath
-
-    -h or --help
-    -v or --version
     """
-    
-    try:
-        arg = sys.argv[1]
-    except IndexError:
-        raise SystemExit(f"Usage: {sys.argv[0]} <options> <arguments>")
-
-    
-
-    make_tour()
+    print(args)
+    #tour_make()
 
 
-main()
+if __name__ == '__main__':
+    arguments = docopt.docopt(__doc__, version='Perecian v2.0.0')
+    main(arguments)
