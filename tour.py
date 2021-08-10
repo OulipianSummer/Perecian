@@ -30,7 +30,7 @@ MOVE_Y = [1, 2, 2, 1, -1, -2, -2, -1]
 #  Functions
 #===============================================================================
 
-def tour_make():
+def tour_make_warnsdorff():
     """Creates a knight's tour using the Warnsdorff heuristic
 
     Keyword arguments:
