@@ -20,8 +20,9 @@ Options:
 """
 
 from tour import tour_make_warnsdorff
+from tour import Tour
 from project import Project
-import re
+from validate import validate_project_name, validate_start, validate_order
 import sys
 import docopt
 
@@ -35,21 +36,20 @@ def main(args):
         
         name = args['<project_name>']
         order = args['<order>']
-
-        if len(name) >= 150:
-            raise SystemExit('The provided project name, "{}", is greater than 150 characters. Please shorten it to continue'.format(name))
-        if not order.isnumeric():
-            raise SystemExit('The provided order, "{}", is not a number. Please enter a numeric value to continue'.format(order))
+        
+        validate_project_name(name)
+        validate_order(order)
 
         project = Project(name, order)
 
-        if args['-t'] and args['--tour']:
+        if args['--tour'] or args['<start>']:
             start = args['<start>']
-            if len(start) > 5:
-                raise SystemExit('The provided tour start, "{}", is greater than 5 characters. Please shorten it to continue'.format(start))
-            
-            search = re.findall(r'(\d{1,2},\d{1,2})|([a-z]{1}\d{1,2})')
-            print(search)
+            validate_start(start)
+        
+        tour = Tour(start)
+        print(tour.knight.y)
+
+
 
     # Open the inquierer
     else:
@@ -60,3 +60,4 @@ def main(args):
 if __name__ == '__main__':
     arguments = docopt.docopt(__doc__, version='Perecian v2.0.0')
     main(arguments)
+

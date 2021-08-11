@@ -14,6 +14,24 @@
 from knight import Knight
 from board import Board
 
+
+class Tour(object):
+    def __init__(self, start):
+
+        coords = start.split(',')
+        
+        if len(coords) == 2:
+            x = int(coords[0])
+            y = int(coords[1])
+            self.start = dict(x=x,y=y)
+        else:
+            alpha = int(ord(start[0]) - 96)
+            numeric = int(start[1:])
+            self.start = dict(x=alpha,y=numeric)
+
+        self.knight = Knight(self.start['x'], self.start['y'])
+
+
 #===============================================================================
 #  Constants
 #===============================================================================
