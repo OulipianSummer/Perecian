@@ -1,4 +1,5 @@
 import re
+from pathvalidate import sanitize_filepath, is_valid_filepath
 
 def validate_project_name(name):
     """Validate the project name argument"""
@@ -21,8 +22,13 @@ def validate_start(start):
     
     try:
         search = search.group()
+
     except AttributeError:
         raise SystemExit('Error: The provided tour starting coordinates, "{}", are not formatted correctly. Please enter either two integers seperated by a comma, or a chess square in algebraic chess notation\n\tExamples: 1,10 or a10'.format(start))
 
     if search != start:
         raise SystemExit('Error: The provided tour starting coordinates, "{}", are not formatted correctly. Please enter either two integers seperated by a comma, or a chess square in algebraic chess notation\n\tExamples: 1,10 or a10'.format(start))
+
+def validate_path(path):
+    path = sanitize_filepath(path)
+    return is_valid_filepath(path)

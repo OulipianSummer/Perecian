@@ -16,18 +16,20 @@ from board import Board
 import random
 
 class Tour(object):
-    """A class that defines a knight's tour
+    """A class that defines and manages a knight's tour
     
     Properties:
     
     settings -- a dictionary containing settings used to create a knight's tour.
-        settings.shuffle -- a boolean used to shuffle the order of the moves before starting the tour
-        settings.format -- a string that describes how to output the completed tour
+        shuffle -- a boolean used to shuffle the order of the moves before starting the tour
+        format -- a string that describes how to output the completed tour
+        mode -- a string that defines the type of tour that will be constructed
     
     order -- an integer that describes the size of the knight's tour
     max_moves -- an integer that describes the maximum number of moves in a given chess board
-    start -- a string representing the starting position of the knight
-    knight -- an implemention of the Knight class, initialized with the starting position
+    start -- a string representing the starting position of the knight in either numeric (2,5) or algebraic chess notation (b5)
+    knight -- an instance of the Knight class, instantiated with the starting position
+    board -- an instance of the Board class, instantiated with the order
     """
     def __init__(self, args):
 
@@ -55,18 +57,18 @@ class Tour(object):
         self.moves = [[-2,1],[-1,2],[1,2],[2,1],[2,-1],[1,-2],[-1,-2],[-2,-1]]
 
         # Shuffle the moves, if requested
-        if args['--shuffle']:
+        if self.settings['shuffle']:
             self.moves = self.__shuffle_moves()
         
         # Parse and initialize start position
         start = args['<start>']
         coords = start.split(',')
         if len(coords) == 2:
-            x = int(coords[0])
+            x = (self.order + 1) - int(coords[0])
             y = int(coords[1])
             self.start = dict(x=x,y=y)
         else:
-            alpha = int(ord(start[0]) - 96)
+            alpha = (self.order + 1) - int(ord(start[0]) - 96)
             numeric = int(start[1:])
             self.start = dict(x=alpha,y=numeric)
 
@@ -81,8 +83,7 @@ class Tour(object):
 
     def create_tour(self):
         if self.settings['mode'] == 'warnsdorff':
-           tour = self.__make_warnsdorff()
-           return tour
+           self.__make_warnsdorff()
 
     def __make_warnsdorff(self):
         """Creates a knight's tour using the Warnsdorff heuristic

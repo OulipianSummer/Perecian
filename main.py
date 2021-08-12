@@ -21,9 +21,10 @@ Options:
 
 from tour import Tour
 from project import Project
-from validate import validate_project_name, validate_start, validate_order
+from validate import validate_project_name, validate_start, validate_order, validate_path
 import sys
 import docopt
+
 
 
 def main(args):
@@ -45,9 +46,14 @@ def main(args):
             start = args['<start>']
             validate_start(start)
         
+            tour = Tour(args)
+            tour.create_tour()
         
-        tour = Tour(args)
-        tour.create_tour()
+        if args['<source_path>']:
+            validate_path(args['<source_path>'])
+
+
+
 
 
 
