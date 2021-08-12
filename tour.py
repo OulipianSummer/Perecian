@@ -13,13 +13,54 @@
 
 from knight import Knight
 from board import Board
-
+import random
 
 class Tour(object):
-    def __init__(self, start):
+    """A class that defines a knight's tour
+    
+    Properties:
+    
+    settings -- a dictionary containing settings used to create a knight's tour.
+        settings.shuffle -- a boolean used to shuffle the order of the moves before starting the tour
+        settings.format -- a string that describes how to output the completed tour
+    
+    order -- an integer that describes the size of the knight's tour
+    max_moves -- an integer that describes the maximum number of moves in a given chess board
+    start -- a string representing the starting position of the knight
+    knight -- an implemention of the Knight class, initialized with the starting position
+    """
+    def __init__(self, args):
 
-        coords = start.split(',')
+        # Initialize a dictionary of settings
+        settings = dict(
+            shuffle = False,
+            format = 'print',
+            mode = 'warnsdorff',
+        )
+
+        # Parse shuffle setting
+        if args['--shuffle']:
+            settings['shuffle'] = True
+
+        # Parse and initialize export format
+        if args['--export']:
+            settings['format'] = 'file'
+        if args['--json']:
+            settings['format'] = 'json'
         
+        # Initialize properties
+        self.order = int(args['<order>'])
+        self.max_moves = self.order**2
+        self.settings = settings
+        self.moves = [[-2,1],[-1,2],[1,2],[2,1],[2,-1],[1,-2],[-1,-2],[-2,-1]]
+
+        # Shuffle the moves, if requested
+        if args['--shuffle']:
+            self.moves = self.__shuffle_moves()
+        
+        # Parse and initialize start position
+        start = args['<start>']
+        coords = start.split(',')
         if len(coords) == 2:
             x = int(coords[0])
             y = int(coords[1])
@@ -29,157 +70,137 @@ class Tour(object):
             numeric = int(start[1:])
             self.start = dict(x=alpha,y=numeric)
 
+        # Instantiate knight and board classes
         self.knight = Knight(self.start['x'], self.start['y'])
+        self.board = Board(self.order)
 
+    def __shuffle_moves(self):
+        copy = self.moves.copy()
+        random.shuffle(copy)
+        return copy
 
-#===============================================================================
-#  Constants
-#===============================================================================
+    def create_tour(self):
+        if self.settings['mode'] == 'warnsdorff':
+           tour = self.__make_warnsdorff()
+           return tour
 
-# Define the board size and use it to determine the maximum moves.
-BOARD_SIZE = 8
-MAX_MOVES = BOARD_SIZE**2
+    def __make_warnsdorff(self):
+        """Creates a knight's tour using the Warnsdorff heuristic
 
-# Define the possible combinations of Knight moves.
-MOVE_X = [-2, -1, 1, 2, 2, 1, -1, -2]
-MOVE_Y = [1, 2, 2, 1, -1, -2, -2, -1]
+        """
+        max_moves = self.max_moves
 
-#===============================================================================
-#  Functions
-#===============================================================================
+        # Create a Knight object to move around the board.
+        knight = self.knight
 
-def tour_make_warnsdorff():
-    """Creates a knight's tour using the Warnsdorff heuristic
+        # Instantiate a board and set the initial Knight position with move 1.
+        board = self.board
+        board.place_knight(1, knight.x, knight.y)
 
-    Keyword arguments:
-    <None>
-    """
-    # Instantiate the x & y position variables.
-    x = 9
-    y = 9
+        # Test special cases for all the moves.
+        for current_move in range(2, max_moves + 1):
+            num_possibilities, next_x, next_y = self.__get_num_possibilities(knight, board)
+            min_exits_idx = 0
 
-    # Take x & y initial inputs. Loop while invalid.
-    while (x < 1 or x > BOARD_SIZE) or (y < 1 or y > BOARD_SIZE):
-        x, y = input("Enter x & y (1-" + str(BOARD_SIZE)
-                     + ") separated by a space (e.g. 4 4): ").split()
-        x, y = [int(x), int(y)]
+            # If there are no possibilities left, then end the tour prematurely.
+            if num_possibilities == 0:
+                print("The knight's tour ended prematurely at (" + str(knight.x + 1)
+                    + "," + str(knight.y + 1) + ") during move #"
+                    + str(current_move - 1) + ".")
+                print()
+                break
+            
+            # If there is more than 1 possibility, then find the next squares with the
+            # minimum number of exits.
+            elif num_possibilities > 1:
+                exits = self.__find_min_exits(board, num_possibilities, next_x, next_y)
+                min_exits_idx = self.__get_idx_smallest_num_exits(num_possibilities, exits)
 
-        if x < 1 or x > BOARD_SIZE:
-            print("ERROR:: x must be 1-" + str(BOARD_SIZE))
+            # Move the knight and mark its position on the board.     
+            knight.move(next_x[min_exits_idx], next_y[min_exits_idx])
+            board.place_knight(current_move, knight.x, knight.y)
 
-        if y < 1 or y > BOARD_SIZE:
-            print("ERROR:: y must be 1-" + str(BOARD_SIZE))
+        # Print out the board.
+        board.print_board()
 
-    print()
+    def __get_num_possibilities(self, knight, board):
+        """Test each of the eight squares one knight's move away from (I,J) and
+        form a list of the possibilities for the next square (next_i(l), next_j(l)).
 
-    # Create a Knight object to move around the board.
-    knight = Knight(x, y)
+        Keyword arguments:
+        knight -- Knight object
+        board  -- Board object
+        """
+        board_size = self.order
 
-    # Instantiate a board and set the initial Knight position with move 1.
-    board = Board(BOARD_SIZE)
-    board.place_knight(1, knight.x, knight.y)
+        num_possibilities = 0
+        next_x = [0] * board_size
+        next_y = [0] * board_size
 
-    # Test special cases for all the moves.
-    for current_move in range(2, MAX_MOVES + 1):
-        num_possibilities, next_x, next_y = get_num_possibilities(knight, board)
+        # Test each of the 8 possible moves.
+        for i in range(0, 8):
+            # Check the next move without storing it.
+            temp_x = knight.x + self.moves[i][0]
+            temp_y = knight.y + self.moves[i][1]
+
+            if (temp_x >= 0 and temp_x < board_size
+                and temp_y >= 0 and temp_y < board_size
+                and board.is_empty(temp_x, temp_y)):
+                next_x[num_possibilities] = temp_x
+                next_y[num_possibilities] = temp_y
+                num_possibilities = num_possibilities + 1
+
+        # Return the number of possibilities and list of next X & Y positions.
+        return num_possibilities, next_x, next_y
+
+    def __find_min_exits(self, board, num_possibilities, next_x, next_y):
+        """Find the next squares with the minimum number of .
+
+        Keyword arguments:
+        num_possibilities -- Number of possibilities
+        """
+        board_size = self.order
+        # Store the number of exits for each move.
+        exits = [0] * board_size
+
+        # Check all the exits for each possible moves.    
+        for i in range(0, num_possibilities):
+            num_exits = 0
+
+            # Check the exits of the move after each next move.
+            for j in range(0, 8):
+                check_x = next_x[i] + self.moves[j][0]
+                check_y = next_y[i] + self.moves[j][1]
+
+                # If the exit of the move after the next move is valid, then
+                # increment the number of possible exits.
+                if (check_x >= 0 and check_x < board_size
+                    and check_y >= 0 and check_y < board_size
+                    and board.is_empty(check_x, check_y)):
+                    num_exits = num_exits + 1
+
+            # Store the number of exits in the current index.
+            exits[i] = num_exits
+
+        # Return the number of exits for each move.
+        return exits
+
+    def __get_idx_smallest_num_exits(self, num_possibilities, exits):
+        """Get the smallest number of exits to ultimately decide the knight's next
+        move based on Warnsdorff's Rule.
+
+        Keyword arguments:
+        num_possibilities -- Number of possibilities
+        exits             -- Number of exits for each move
+        """
         min_exits_idx = 0
+        current_num_exit = exits[0]
 
-        # If there are no possibilities left, then end the tour prematurely.
-        if num_possibilities == 0:
-            print("The knight's tour ended prematurely at (" + str(knight.x + 1)
-                  + "," + str(knight.y + 1) + ") during move #"
-                  + str(current_move - 1) + ".")
-            print()
-            break
-        
-        # If there is more than 1 possibility, then find the next squares with the
-        # minimum number of exits.
-        elif num_possibilities > 1:
-            exits = find_min_exits(board, num_possibilities, next_x, next_y)
-            min_exits_idx = get_idx_smallest_num_exits(num_possibilities, exits)
+        # Get the index that contains the smallest number of exits.
+        for i in range(1, num_possibilities):
+            if current_num_exit > exits[i]:
+                current_num_exit = exits[i]
+                min_exits_idx = i
 
-        # Move the knight and mark its position on the board.     
-        knight.move(next_x[min_exits_idx], next_y[min_exits_idx])
-        board.place_knight(current_move, knight.x, knight.y)
-
-    # Print out the board.
-    board.print_board()
-
-def get_num_possibilities(knight, board):
-    """Test each of the eight squares one knight's move away from (I,J) and
-    form a list of the possibilities for the next square (next_i(l), next_j(l)).
-
-    Keyword arguments:
-    knight -- Knight object
-    board  -- Board object
-    """
-    num_possibilities = 0
-    next_x = [0] * BOARD_SIZE
-    next_y = [0] * BOARD_SIZE
-
-    # Test each of the 8 possible moves.
-    for i in range(0, 8):
-        # Check the next move without storing it.
-        temp_x = knight.x + MOVE_X[i]
-        temp_y = knight.y + MOVE_Y[i]
-
-        if (temp_x >= 0 and temp_x < BOARD_SIZE
-            and temp_y >= 0 and temp_y < BOARD_SIZE
-            and board.is_empty(temp_x, temp_y)):
-            next_x[num_possibilities] = temp_x
-            next_y[num_possibilities] = temp_y
-            num_possibilities = num_possibilities + 1
-
-    # Return the number of possibilities and list of next X & Y positions.
-    return num_possibilities, next_x, next_y
-
-def find_min_exits(board, num_possibilities, next_x, next_y):
-    """Find the next squares with the minimum number of .
-
-    Keyword arguments:
-    num_possibilities -- Number of possibilities
-    """
-    # Store the number of exits for each move.
-    exits = [0] * BOARD_SIZE
-
-    # Check all the exits for each possible moves.    
-    for i in range(0, num_possibilities):
-        num_exits = 0
-
-        # Check the exits of the move after each next move.
-        for j in range(0, 8):
-            check_x = next_x[i] + MOVE_X[j]
-            check_y = next_y[i] + MOVE_Y[j]
-
-            # If the exit of the move after the next move is valid, then
-            # increment the number of possible exits.
-            if (check_x >= 0 and check_x < BOARD_SIZE
-                and check_y >= 0 and check_y < BOARD_SIZE
-                and board.is_empty(check_x, check_y)):
-                num_exits = num_exits + 1
-
-        # Store the number of exits in the current index.
-        exits[i] = num_exits
-
-    # Return the number of exits for each move.
-    return exits
-
-def get_idx_smallest_num_exits(num_possibilities, exits):
-    """Get the smallest number of exits to ultimately decide the knight's next
-    move based on Warnsdorff's Rule.
-
-    Keyword arguments:
-    num_possibilities -- Number of possibilities
-    exits             -- Number of exits for each move
-    """
-    min_exits_idx = 0
-    current_num_exit = exits[0]
-
-    # Get the index that contains the smallest number of exits.
-    for i in range(1, num_possibilities):
-        if current_num_exit > exits[i]:
-            current_num_exit = exits[i]
-            min_exits_idx = i
-
-    # Return the index for which there is the smallest number of exits.
-    return min_exits_idx
+        # Return the index for which there is the smallest number of exits.
+        return min_exits_idx

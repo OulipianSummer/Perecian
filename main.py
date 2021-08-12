@@ -1,7 +1,7 @@
 """Perecian
 
 Usage:
-    perecian new [( <project_name> <order> [(-t <start>)] [<source_path>] [-e [-i] [<export_path>] | -j] )]
+    perecian new [( <project_name> <order> [(-t [-s] <start>)] [<source_path>] [-e [-i] [<export_path>] | -j] )]
     perecian generate tour ([-s] <order> <start> | [<source_path>]) [-e [-i] [<export_path>] | -j]
     perecian generate image (-t <tour_string> | [-s] <order> <start>) [(-e [<export_path>] )]
     perecian generate mols <order> <number> [(-e [<export_path>] | -j)]
@@ -19,7 +19,6 @@ Options:
     -j --json       Export results as JSON
 """
 
-from tour import tour_make_warnsdorff
 from tour import Tour
 from project import Project
 from validate import validate_project_name, validate_start, validate_order
@@ -46,8 +45,9 @@ def main(args):
             start = args['<start>']
             validate_start(start)
         
-        tour = Tour(start)
-        print(tour.knight.y)
+        
+        tour = Tour(args)
+        tour.create_tour()
 
 
 
@@ -60,4 +60,3 @@ def main(args):
 if __name__ == '__main__':
     arguments = docopt.docopt(__doc__, version='Perecian v2.0.0')
     main(arguments)
-
