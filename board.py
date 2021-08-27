@@ -37,7 +37,7 @@ class Board(object):
         """
         self.board[x][y] = move_number
 
-    def print_board(self):
+    def print_board_to_console(self):
         """Prints out the board with Knight move numbers.
 
         Keyword arguments:
@@ -47,3 +47,24 @@ class Board(object):
             for j in range(self.size):
                 print(str(self.board[i][j]).rjust(2) + " ", end="")
             print()
+
+    def to_chess_notation(self):
+        """Returns a dictionary with each move mapped out in chess notation.
+        
+        Structure:
+        key - the move number
+        value - the square notation
+        """
+        coords = {}
+        order = self.size
+        for i in range(self.size):
+            for j in range(self.size):
+                square = self.board[i][j]
+                x = chr(int((order - i) + 96))
+                y = j + 1
+                coords[square] = '{}{}'.format(x, y)
+        return coords
+
+                
+    def print_board_to_json(self):
+        exit

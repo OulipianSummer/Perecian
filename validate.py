@@ -31,4 +31,5 @@ def validate_start(start):
 
 def validate_path(path):
     path = sanitize_filepath(path)
-    return is_valid_filepath(path)
+    if not is_valid_filepath(path):
+        raise SystemExit('Error: The provided filepath, "{}", is not a valid system path.'.format(path))

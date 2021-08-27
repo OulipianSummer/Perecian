@@ -40,20 +40,32 @@ def main(args):
         validate_project_name(name)
         validate_order(order)
 
-        project = Project(name, order)
+        project = Project(args)
 
         if args['--tour'] or args['<start>']:
             start = args['<start>']
             validate_start(start)
-        
             tour = Tour(args)
-            tour.create_tour()
+            project.set_tour(tour)
         
         if args['<source_path>']:
-            validate_path(args['<source_path>'])
+            import_path = args['<source_path>']
+            validate_path(import_path)
+            project.set_import_path(import_path) 
 
+         # Get tour
+        project.tour.create_tour()
+        
+        # Get MOLS
 
+        # Get list
 
+        if args['--export']:
+            export_path = args['<export_path>']
+            validate_path(export_path)
+            project.set_export_path(export_path)
+
+        
 
 
 

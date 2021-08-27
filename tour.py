@@ -1,14 +1,11 @@
 #===============================================================================
-#  File        : main.py
-#  Project     : Knight's Tour
-#  Description : Python implementation to solve a knight's tour using
-#                Warnsdorff's Rule.
-#  Company     : Cal Poly Pomona
-#  Engineer    : Byron Phung
+#  File        : tour.py
+#  Project     : Perecian
+#  Description : A class for managing Perecian tours
 #===============================================================================
 
 #===============================================================================
-#  Libraries
+#  Class Definition
 #===============================================================================
 
 from knight import Knight
@@ -121,8 +118,6 @@ class Tour(object):
             knight.move(next_x[min_exits_idx], next_y[min_exits_idx])
             board.place_knight(current_move, knight.x, knight.y)
 
-        # Print out the board.
-        board.print_board()
 
     def __get_num_possibilities(self, knight, board):
         """Test each of the eight squares one knight's move away from (I,J) and
