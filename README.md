@@ -1,6 +1,6 @@
 # Depricated
 
-This project is so old and wowzers it barely works. Why don't you come and check out the [new version of this thing](https://github.com/OulipianSummer/Perecian) that I am build from scratch called `perec`? It'll be fun!
+This project is so old and wowzers it barely works. Why don't you come and check out the [new version of this thing](https://github.com/OulipianSummer/perec) that I am build from scratch called `perec`? It'll be fun!
 
 ## Perecian
 Perecian is an open souce CLI tool for writers written in Python.
