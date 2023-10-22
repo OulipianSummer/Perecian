@@ -1,4 +1,8 @@
-# Perecian
+# Depricated
+
+This project is so old and wowzers it barely works. Why don't you come and check out the new version of this thing that I am build from scratch called [`perec`](https://github.com/OulipianSummer/Perecian)? It'll be fun!
+
+## Perecian
 Perecian is an open souce CLI tool for writers written in Python.
                     
 Based off of the constraints Georges Perec useed to create his masterpeice, Life: A User's Manual, Pereican uses both knight's tours, and mutually  orthogonal latin squares to create a unique list of constrained writing prompts for novels, short stories, poems, and much more.
